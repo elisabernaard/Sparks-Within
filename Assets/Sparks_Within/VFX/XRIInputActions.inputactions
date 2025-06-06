@@ -1,0 +1,34 @@
+{
+    "name": "XRIInputActions",
+    "maps": [
+        {
+            "name": "XRI LeftHand Locomotion",
+            "id": "d33d8736-8610-4301-b0e8-9db6343c8c14",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "9ff204f0-e819-4887-a9c7-a5661144468d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "97da482f-9105-48cf-8d90-b84388ab5fdc",
+                    "path": "<XRController>{LeftHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
