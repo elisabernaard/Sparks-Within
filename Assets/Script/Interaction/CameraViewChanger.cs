@@ -8,9 +8,6 @@ public class CameraViewChanger : MonoBehaviour
     private Vector3 offset;
     private bool isFollowing = false;
 
-    [SerializeField] private float smoothSpeed = 5f;
-    [SerializeField] private float maxDistance = 10f;
-
     private GameObject lastFollowedCube; // 👈 마지막으로 따라간 큐브 저장
 
     void Start()

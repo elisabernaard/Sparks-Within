@@ -1,0 +1,34 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "ClapSimulator",
+            "id": "11888e6c-3974-4f38-bfb8-9df1c7d98c48",
+            "actions": [
+                {
+                    "name": "Clap",
+                    "type": "Button",
+                    "id": "201e5330-3678-4444-9970-2dd1f4f60ffb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "47cea5e3-913d-4cc3-9eeb-c6f679a2844c",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Clap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
