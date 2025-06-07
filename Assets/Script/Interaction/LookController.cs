@@ -5,25 +5,28 @@ public class LookController : MonoBehaviour
 {
     public Transform playerCamera;
     public List<GameObject> cubes;
-    public float lookThreshold = 0.98f; // 약 10도 이내
-    public float defaultVolume = 1.5f; // 기본 볼륨을 1.5배로 설정
-    public float spatialBlend = 0f; // 3D 효과 정도 (0: 2D, 1: 3D)
-    public float maxDistance = 100f; // 최대 거리
+    public float lookAcquireThreshold = 0.98f;
+    public float lookReleaseThreshold = 0.96f;
+    public float defaultVolume = 1.5f;
+    public float spatialBlend = 0f;
+    public float maxDistance = 100f;
 
     public GameObject markerPrefab;
+    public LayerMask obstacleLayerMask; // 👈 오직 Obstacle만 체크!
+
     private GameObject currentMarker;
     public GameObject currentLookTarget { get; private set; }
 
     private Dictionary<GameObject, AudioSource> audioSources = new();
     private Dictionary<GameObject, SoundProfile> profiles = new();
-    
+
     void Start()
     {
-        // 모든 큐브의 AudioSource 설정 초기화
         foreach (var cube in cubes)
         {
             var audio = cube.GetComponent<AudioSource>();
             var profile = cube.GetComponent<SoundProfile>();
+
             if (audio != null)
             {
                 audio.spatialBlend = spatialBlend;
@@ -31,6 +34,7 @@ public class LookController : MonoBehaviour
                 audio.rolloffMode = AudioRolloffMode.Linear;
                 audioSources[cube] = audio;
             }
+
             if (profile != null)
             {
                 profiles[cube] = profile;
@@ -51,32 +55,57 @@ public class LookController : MonoBehaviour
 
         foreach (var cube in cubes)
         {
-            AudioSource audio = audioSources.ContainsKey(cube) ? audioSources[cube] : null;
-            SoundProfile profile = profiles.ContainsKey(cube) ? profiles[cube] : null;
+            if (!audioSources.ContainsKey(cube) || !profiles.ContainsKey(cube)) continue;
 
             Vector3 dirToCube = (cube.transform.position - playerCamera.position).normalized;
             float dot = Vector3.Dot(playerCamera.forward, dirToCube);
 
-            bool alreadyCollected = profile != null &&
-                                    SoundMemoryManager.Instance != null &&
-                                    SoundMemoryManager.Instance.HasBeenCollected(profile.beingName);
+            bool blocked = Physics.Raycast(
+                playerCamera.position,
+                dirToCube,
+                Vector3.Distance(playerCamera.position, cube.transform.position),
+                obstacleLayerMask
+            );
 
-            // 🔍 가장 정면에 가까운 오브젝트만 선택
-            if (dot > lookThreshold && dot > bestDot)
+            bool alreadyCollected = SoundMemoryManager.Instance != null &&
+                                    SoundMemoryManager.Instance.HasBeenCollected(profiles[cube].beingName);
+
+            if (!blocked && !alreadyCollected && dot > lookAcquireThreshold && dot > bestDot)
             {
                 bestDot = dot;
                 bestCandidate = cube;
             }
         }
 
-        currentLookTarget = bestCandidate;
+        GameObject previousTarget = currentLookTarget;
 
-        // 🔊 오디오 제어: 하나만 재생, 나머지는 멈춤
+        // 히스테리시스 적용
+        if (currentLookTarget != null && bestCandidate == null)
+        {
+            Vector3 dirToCurrent = (currentLookTarget.transform.position - playerCamera.position).normalized;
+            float currentDot = Vector3.Dot(playerCamera.forward, dirToCurrent);
+
+            bool stillBlocked = Physics.Raycast(
+                playerCamera.position,
+                dirToCurrent,
+                Vector3.Distance(playerCamera.position, currentLookTarget.transform.position),
+                obstacleLayerMask
+            );
+
+            if (stillBlocked || currentDot < lookReleaseThreshold)
+            {
+                currentLookTarget = null;
+            }
+        }
+        else
+        {
+            currentLookTarget = bestCandidate;
+        }
+
+        // 오디오 제어
         foreach (var cube in cubes)
         {
-            AudioSource audio = audioSources.ContainsKey(cube) ? audioSources[cube] : null;
-            if (audio == null) continue;
-
+            AudioSource audio = audioSources[cube];
             if (cube == currentLookTarget)
             {
                 if (!audio.isPlaying)
@@ -87,44 +116,38 @@ public class LookController : MonoBehaviour
             }
             else
             {
-                if (audio.isPlaying)
-                    audio.Stop();
+                if (audio.isPlaying) audio.Stop();
             }
         }
 
-        UpdateCapsule(currentLookTarget);
+        if (previousTarget != currentLookTarget)
+        {
+            UpdateMarker();
+        }
     }
 
-
-
-    void UpdateCapsule(GameObject previousTarget)
+    void UpdateMarker()
     {
         if (currentMarker == null) return;
 
         if (currentLookTarget != null)
         {
-            currentMarker.SetActive(true);
+            if (!currentMarker.activeSelf)
+                currentMarker.SetActive(true);
 
-            // 👇 부모가 달라졌을 때만 변경 (최적화)
             if (currentMarker.transform.parent != currentLookTarget.transform)
-            {
                 currentMarker.transform.SetParent(currentLookTarget.transform);
-            }
 
             currentMarker.transform.localPosition = Vector3.zero;
             currentMarker.transform.localRotation = Quaternion.identity;
         }
         else
         {
-            currentMarker.SetActive(false);
+            if (currentMarker.activeSelf)
+                currentMarker.SetActive(false);
 
-            // 👇 이전에 바라보던 오브젝트와의 관계만 제거
             if (currentMarker.transform.parent != null)
-            {
                 currentMarker.transform.SetParent(null);
-            }
         }
     }
-
-
 }
