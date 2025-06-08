@@ -6,11 +6,22 @@ public class SoundMemoryManager : MonoBehaviour
     public static SoundMemoryManager Instance;
     private List<string> collectedNames = new();
     private List<AudioSource> activeSources = new();
+    public AudioClip teleportSfx;
+    private AudioSource sfxSource;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        if (sfxSource == null)
+        {
+            GameObject sfxObj = new GameObject("TeleportSFXSource");
+            sfxObj.transform.SetParent(transform);
+            sfxSource = sfxObj.AddComponent<AudioSource>();
+            sfxSource.spatialBlend = 0f; // 2D 사운드
+            sfxSource.playOnAwake = false;
+        }
     }
 
     public void AddSound(SoundProfile profile)
@@ -52,5 +63,11 @@ public class SoundMemoryManager : MonoBehaviour
         return collectedNames.Contains(beingName); // beingName은 SoundProfile.beingName
     }
 
-
+    public void PlayTeleportSfx()
+    {
+        if (teleportSfx != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(teleportSfx, 1f);
+        }
+    }
 }

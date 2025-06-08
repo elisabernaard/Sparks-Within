@@ -735,6 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdcde183e7fa840729a3a18868f62269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teleportSfx: {fileID: 8300000, guid: 3c6d78a5efc54476f8d9c5831ca6cfb9, type: 3}
 --- !u!4 &88073588
 Transform:
   m_ObjectHideFlags: 0

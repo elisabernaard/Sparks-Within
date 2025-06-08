@@ -131,6 +131,7 @@ public class ProximityTrigger : MonoBehaviour
             }
 
             Debug.Log($"🎵 Playing sound: {profile.beingName}");
+            SoundMemoryManager.Instance.PlayTeleportSfx();
             SoundMemoryManager.Instance.AddSound(profile);
             UpdateMaterialEffect();
         }
