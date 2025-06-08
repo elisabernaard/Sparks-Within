@@ -8726,13 +8726,16 @@ MonoBehaviour:
   - {fileID: 1950303630}
   lookAcquireThreshold: 0.98
   lookReleaseThreshold: 0.96
-  defaultVolume: 1.5
+  minVolume: 0.05
+  maxVolume: 1.5
+  focusTimeToMax: 3
   spatialBlend: 0
   maxDistance: 100
   markerPrefab: {fileID: 1749123570405734575, guid: d50aa0710bd9a4dfd9ecfb048a1769cf, type: 3}
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  mixerGroup: {fileID: 24300002, guid: bbf0ba340003c4f79b583cb0776d821a, type: 2}
 --- !u!1 &1794832466
 GameObject:
   m_ObjectHideFlags: 0
