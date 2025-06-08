@@ -7,6 +7,7 @@ public class CameraViewChanger : MonoBehaviour
     private Transform targetCube;
     private Vector3 offset;
     private bool isFollowing = false;
+    private SoundMemoryManager soundMemoryManager;
 
     private GameObject lastFollowedCube; // 👈 마지막으로 따라간 큐브 저장
 
@@ -17,7 +18,10 @@ public class CameraViewChanger : MonoBehaviour
 
         if (playerCamera == null)
             playerCamera = Camera.main.transform;
+
+        soundMemoryManager = SoundMemoryManager.Instance;
     }
+
 
     void LateUpdate()
     {
@@ -29,6 +33,14 @@ public class CameraViewChanger : MonoBehaviour
 
     public void MoveToCube(GameObject cube)
     {
+        // ✋ 이미 수집한 큐브는 무시
+        var profile = cube.GetComponent<SoundProfile>();
+        if (soundMemoryManager != null && profile != null && soundMemoryManager.HasBeenCollected(profile.beingName))
+        {
+            Debug.Log($"🚫 {profile.beingName} is already collected. Camera will not follow.");
+            return;
+        }
+
         if (cube != null && xrRig != null)
         {
             // ✅ 이전 큐브 다시 움직이게 함

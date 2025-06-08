@@ -58,6 +58,25 @@ public class SoundMemoryManager : MonoBehaviour
         activeSources.Add(src);
     }
 
+    public void RemoveSound(string beingName)
+    {
+        if (collectedNames.Contains(beingName))
+        {
+            collectedNames.Remove(beingName);
+            Debug.Log($"🧹 Sound profile for {beingName} removed from memory.");
+
+            // ❗ 재생 중인 AudioSource 제거
+            var source = activeSources.Find(src => src != null && src.gameObject.name == "Sound_" + beingName);
+            if (source != null)
+            {
+                source.Stop();
+                activeSources.Remove(source);
+                Destroy(source.gameObject);
+            }
+        }
+    }
+
+
     public bool HasBeenCollected(string beingName)
     {
         return collectedNames.Contains(beingName); // beingName은 SoundProfile.beingName

@@ -17,7 +17,7 @@ public class LookController : MonoBehaviour
     public GameObject markerPrefab;
     public LayerMask obstacleLayerMask;
 
-    public AudioMixerGroup mixerGroup; // 🎯 Unity에서 할당 필요
+    public AudioMixerGroup mixerGroup;
     private Material markerMaterial;
 
     private GameObject currentMarker;
@@ -99,10 +99,7 @@ public class LookController : MonoBehaviour
                 obstacleLayerMask
             );
 
-            bool alreadyCollected = SoundMemoryManager.Instance != null &&
-                                    SoundMemoryManager.Instance.HasBeenCollected(profiles[cube].beingName);
-
-            if (!blocked && !alreadyCollected && dot > lookAcquireThreshold && dot > bestDot)
+            if (!blocked && dot > lookAcquireThreshold && dot > bestDot)
             {
                 bestDot = dot;
                 bestCandidate = cube;
@@ -146,33 +143,32 @@ public class LookController : MonoBehaviour
         foreach (var cube in cubes)
         {
             AudioSource audio = audioSources[cube];
-            if (cube == currentLookTarget)
+            SoundProfile profile = profiles[cube];
+            bool alreadyCollected = SoundMemoryManager.Instance != null &&
+                                    SoundMemoryManager.Instance.HasBeenCollected(profile.beingName);
+
+            if (cube == currentLookTarget && !alreadyCollected)
             {
                 lookDuration += Time.deltaTime;
                 float t = Mathf.Clamp01(lookDuration / focusTimeToMax);
                 float linearVolume = Mathf.Lerp(minVolume, maxVolume, t);
 
-                // AudioSource volume 최대 1.0까지만 사용
                 audio.volume = Mathf.Min(1f, linearVolume);
 
                 if (!audio.isPlaying)
                     audio.Play();
 
-                // Mixer를 통한 추가 볼륨 조절 (dB로)
                 if (mixerGroup != null)
                 {
-                    float dB = Mathf.Log10(Mathf.Clamp(linearVolume, 0.01f, 1.5f)) * 20f; // 예: 0.3 → -10dB, 1.5 → +3.5dB
+                    float dB = Mathf.Log10(Mathf.Clamp(linearVolume, 0.01f, 1.5f)) * 20f;
                     mixerGroup.audioMixer.SetFloat("Volume", dB);
                 }
 
-                // 마커 밝기 연동 (보일 때만)
                 if (currentMarker != null && currentMarker.activeSelf && markerMaterial != null)
                 {
                     float brightness = Mathf.InverseLerp(minVolume, maxVolume, linearVolume);
                     markerMaterial.SetFloat("_FresnelPower", Mathf.Lerp(1.5f, 4.5f, brightness));
                     markerMaterial.SetColor("_FresnelColor", Color.yellow * Mathf.Lerp(0.3f, 2.5f, brightness));
-
-                    // Debug.Log($"🎯 {cube.name} | 🔊 Volume: {linearVolume:F2}, 💡 Brightness: {brightness:F2}");
                 }
             }
             else
