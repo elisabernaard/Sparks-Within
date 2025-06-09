@@ -414,6 +414,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &63327601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1170,6 +1171,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &165168247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2317,6 +2319,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &556147103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2714,6 +2717,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &600216429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3261,6 +3265,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &749804949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3654,6 +3659,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &868113400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4037,6 +4043,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &917623182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4752,6 +4759,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1167215965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5292,6 +5300,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1220116205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5755,6 +5764,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1228716674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5908,6 +5918,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1256678424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6229,6 +6240,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1302577454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6996,6 +7008,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1538099269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7286,6 +7299,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1541980952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7576,6 +7590,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1568252133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8088,6 +8103,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1670004344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8686,6 +8702,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ace5b6e0104b84ee8b97097e79300c0e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a6df7ce98f7c44a83849a3b03112bece, type: 2}
     - target: {fileID: 919132149155446097, guid: ace5b6e0104b84ee8b97097e79300c0e, type: 3}
       propertyPath: m_Name
       value: Landscape_merged_cut
@@ -9203,6 +9223,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1925855790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9524,6 +9545,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1947130772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9814,6 +9836,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &1950303634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10485,6 +10508,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1052682133}
   handTouchThreshold: 0.05
   cubeAlignmentThreshold: 0.95
+  onboardingManager: {fileID: 0}
 --- !u!114 &2101835678
 MonoBehaviour:
   m_ObjectHideFlags: 0
