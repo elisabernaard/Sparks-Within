@@ -89,4 +89,9 @@ public class SoundMemoryManager : MonoBehaviour
             sfxSource.PlayOneShot(teleportSfx, 1f);
         }
     }
+
+    public int GetCollectedCount() {
+        return collectedNames.Count;
+    }
+
 }
