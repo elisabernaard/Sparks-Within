@@ -9,6 +9,8 @@ public class ProximityTrigger : MonoBehaviour
     public float handTouchThreshold = 0.05f;
     public float cubeAlignmentThreshold = 0.95f;
 
+    public OnboardingManager onboardingManager; // ✅ 수동 연결용 public 필드
+
     private bool triggered = false;
     private GameObject lastTriggeredTarget = null;
 
@@ -46,13 +48,15 @@ public class ProximityTrigger : MonoBehaviour
         soundManager = FindFirstObjectByType<SoundMemoryManager>();
 
         if (cameraViewChanger == null)
-            Debug.LogWarning("⚠️ CameraViewChanger component not found in scene!");
+            Debug.LogWarning("⚠️ CameraViewChanger not found");
         if (lookController == null)
-            Debug.LogWarning("⚠️ LookController not found!");
+            Debug.LogWarning("⚠️ LookController not found");
         if (soundManager == null)
-            Debug.LogWarning("⚠️ SoundMemoryManager not found!");
+            Debug.LogWarning("⚠️ SoundMemoryManager not found");
+        if (onboardingManager == null)
+            Debug.LogWarning("⚠️ OnboardingManager is not assigned in Inspector!");
         if (profile == null)
-            Debug.LogWarning("⚠️ SoundProfile not found on cube!");
+            Debug.LogWarning("⚠️ SoundProfile not found on cube");
     }
 
     void Update()
@@ -61,8 +65,6 @@ public class ProximityTrigger : MonoBehaviour
             return;
 
         float handDistance = Vector3.Distance(leftHand.position, rightHand.position);
-
-        // simulate clap
         if (controls.ClapSimulator.Clap.triggered)
             handDistance = 0f;
 
@@ -72,9 +74,7 @@ public class ProximityTrigger : MonoBehaviour
         GameObject target = lookController.currentLookTarget;
 
         if (target != lastTriggeredTarget)
-        {
             triggered = false;
-        }
 
         if (!triggered && target == gameObject)
         {
@@ -106,6 +106,15 @@ public class ProximityTrigger : MonoBehaviour
         }
 
         ApplyMaterialEffect();
+
+        if (onboardingManager != null)
+        {
+            onboardingManager.OnReformEnd();
+        }
+        else
+        {
+            Debug.LogWarning("❗ onboardingManager is null — please assign it in the Inspector.");
+        }
     }
 
     void ChangeEnvironmentColors()
@@ -143,7 +152,6 @@ public class ProximityTrigger : MonoBehaviour
 
         if (cubeMaterial.HasProperty("_PrimaryColor"))
             cubeMaterial.SetColor("_PrimaryColor", Color.black);
-
         if (cubeMaterial.HasProperty("_SecondaryColor"))
             cubeMaterial.SetColor("_SecondaryColor", Color.black);
     }
@@ -154,7 +162,6 @@ public class ProximityTrigger : MonoBehaviour
 
         if (cubeMaterial.HasProperty("_PrimaryColor"))
             cubeMaterial.SetColor("_PrimaryColor", profile.topColor);
-
         if (cubeMaterial.HasProperty("_SecondaryColor"))
             cubeMaterial.SetColor("_SecondaryColor", profile.bottomColor);
 

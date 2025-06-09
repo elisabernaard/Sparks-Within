@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.VFX;
+using System.Collections;
 
 public class OnboardingManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class OnboardingManager : MonoBehaviour
     public TextMeshProUGUI onboardingText;
     public GameObject particleEntity;
     public string nextSceneName = "CompleteGame";
+
+    [Header("UI")]
+    public Image fadeImage;
 
     [Header("Hands")]
     public Transform leftHand;
@@ -21,23 +25,22 @@ public class OnboardingManager : MonoBehaviour
     public string animationTrigger1 = "Trigger1";
     public string animationTrigger2 = "Trigger2";
     public AudioSource entityAudio;
+    public AudioSource transitionAudioSource;
 
     [Header("Settings")]
     public float lookThreshold = 0.96f;
     public float handTouchThreshold = 0.05f;
-    public float cubeAlignmentThreshold = 0.91f;
 
     private float timer = 0f;
     private bool hasShownFirstText = false;
     private bool hasShownSecondText = false;
     private bool hasTriggeredHands = false;
-    private bool hasStartedReform = false;
-    private bool finalTextShown = false;
-    private float finalTextTimer = 0f;
 
     void Start()
     {
         particleEntity.SetActive(true);
+        if (fadeImage != null)
+            fadeImage.color = new Color(0, 0, 0, 0);
     }
 
     void Update()
@@ -46,106 +49,58 @@ public class OnboardingManager : MonoBehaviour
 
         if (!hasShownFirstText && timer >= 2f)
         {
-            onboardingText.text = "Look at me";
+            onboardingText.text = "You can hear my sound";
             hasShownFirstText = true;
         }
 
-        HandleLookAndAudio();
-
-        if (!hasShownSecondText && timer >= 10f)
+        if (hasShownFirstText && !hasShownSecondText && timer >= 10f)
         {
-            onboardingText.text = "Join your hand\nto share your consciousness with me";
+            onboardingText.text = "Join your hands\nto share your consciousness with me";
             hasShownSecondText = true;
         }
 
         if (hasShownSecondText && !hasTriggeredHands)
         {
-            Debug.Log("👏 TryTriggerHandClap");
-            TryTriggerHandClap();
+            // TryTriggerHandClap();
         }
-
-        if (finalTextShown)
-        {
-            finalTextTimer += Time.deltaTime;
-            if (finalTextTimer >= 3f)
-            {
-                SceneManager.LoadScene(nextSceneName);
-            }
-        }
-    }
-
-    public void OnDissolveEnd()
-    {
-        Debug.Log("🌀 StartDissolve 애니메이션 끝");
-        // entityAnimator.SetTrigger(animationTrigger2); // Reform 시작
-        // onboardingText.text = "You are ready. Your journey begins now.";
-        // hasStartedReform = true;
     }
 
     public void OnReformEnd()
     {
-        Debug.Log("✨ Reform 애니메이션 끝");
         onboardingText.text = "You are ready.\nYour journey begins now.";
-        finalTextShown = true;
-        finalTextTimer = 0f;
+
+        if (transitionAudioSource != null)
+            transitionAudioSource.Play();
+
+        StartCoroutine(FadeAndLoadNextScene());
     }
 
-    void HandleLookAndAudio()
+    private IEnumerator FadeAndLoadNextScene()
     {
-        // 👇 collect 이후에는 항상 재생되게
-        if (hasTriggeredHands)
+        float fadeDuration = 2.5f;
+        float waitAfterFade = 2.5f;
+        float elapsed = 0f;
+
+        Color startColor = new Color(0, 0, 0, 0);
+        Color endColor = new Color(0, 0, 0, 1);
+
+        while (elapsed < fadeDuration)
         {
-            if (!entityAudio.isPlaying)
-                entityAudio.Play();
-            return;
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            if (fadeImage != null)
+                fadeImage.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
         }
 
-        // 👀 collect 전에는 시선에 따라 재생
-        Vector3 dirToEntity = (particleEntity.transform.position - playerCamera.transform.position).normalized;
-        float dot = Vector3.Dot(playerCamera.transform.forward, dirToEntity);
-        VisualEffect vfx = particleEntity.GetComponent<VisualEffect>();
-
-        if (dot > lookThreshold)
-        {
-            if (!entityAudio.isPlaying)
-                entityAudio.Play();
-
-            Debug.Log($"in ParticleSize: {vfx.GetFloat("ParticleSize")}, Turbulence: {vfx.GetFloat("Turbulence")}");
-            // vfx.SetFloat("ParticleSize", 0.5f);      // ← VFX Graph에서 이름 확인
-            // vfx.SetFloat("Turbulence", 0.1f); // ← float3이면 SetVector3 사용
-            entityAnimator.SetTrigger(animationTrigger1);
-        }
-        else
-        {
-            if (entityAudio.isPlaying)
-                entityAudio.Pause();
-
-            Debug.Log($"out ParticleSize: {vfx.GetFloat("ParticleSize")}, Turbulence: {vfx.GetFloat("Turbulence")}");
-            // vfx.SetFloat("ParticleSize", 0.5f);      // ← VFX Graph에서 이름 확인
-            // vfx.SetFloat("Turbulence", 0.5f); // 
-        }
+        yield return new WaitForSeconds(waitAfterFade);
+        SceneManager.LoadScene(nextSceneName);
     }
 
-    void TryTriggerHandClap()
+    // ✅ 에러 해결용 메서드
+    public void OnDissolveEnd()
     {
-        if (leftHand == null || rightHand == null) return;
-
-        float handDistance = Vector3.Distance(leftHand.position, rightHand.position);
-        if (handDistance >= handTouchThreshold) return;
-
-        // 👁️ 바라보고 있는지 확인
-        Vector3 dirToEntity = (particleEntity.transform.position - playerCamera.transform.position).normalized;
-        float dot = Vector3.Dot(playerCamera.transform.forward, dirToEntity);
-        if (dot < lookThreshold) return;
-
-        // ✅ 바라보면서 손만 모으면 성공
-        Debug.Log("👏 Hands are clapped while looking at the entity!");
-        hasTriggeredHands = true;
-
-        // 👇 Trigger2 애니메이션 (Reform) 실행
-        entityAnimator.SetTrigger(animationTrigger2);
-
-        // onboardingText.text = "You shared your consciousness with other entities.";
+        Debug.Log("🌀 OnDissolveEnd called from animation event.");
+        // 여기에 필요하다면 후속 로직 추가
     }
-
 }
