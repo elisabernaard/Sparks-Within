@@ -4,13 +4,10 @@ public class LightMotion : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Seconds for one full oscillation cycle (lower = faster)")]
-    [SerializeField] float cycleDuration = 5f;
+    [SerializeField] float cycleDuration = 10f; // 느리게 만들기 위해 값을 늘림
 
-    [Tooltip("Amplitude of movement in X and Z directions")]
-    [SerializeField] Vector2 movementAmplitudeXZ = new Vector2(20f, 20f);
-
-    [Tooltip("Time offset between X and Z motion (0 = synced, >0 = staggered)")]
-    [SerializeField] float timeOffsetZ = 0.25f;
+    [Tooltip("Amplitude of movement in X direction")]
+    [SerializeField] float movementAmplitudeX = 20f;
 
     private Vector3 initialPosition;
 
@@ -21,11 +18,10 @@ public class LightMotion : MonoBehaviour
 
     void Update()
     {
-        float t = Time.time / cycleDuration * Mathf.PI * 2f; // full sine wave cycle every X seconds
+        float t = Time.time / cycleDuration * Mathf.PI * 2f; // full sine wave cycle
 
-        float offsetX = Mathf.Sin(t) * movementAmplitudeXZ.x;
-        float offsetZ = Mathf.Sin(t + timeOffsetZ * Mathf.PI * 2f) * movementAmplitudeXZ.y;
+        float offsetX = Mathf.Sin(t) * movementAmplitudeX;
 
-        transform.position = initialPosition + new Vector3(offsetX, 0, offsetZ);
+        transform.position = initialPosition + new Vector3(offsetX, 0, 0);
     }
 }
