@@ -801,6 +801,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7556742960148788538, guid: d96bc491a55274428925940d93fef9a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1308473510}
+    - targetCorrespondingSourceObject: {fileID: 7556742960148788538, guid: d96bc491a55274428925940d93fef9a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1308473518}
   m_SourcePrefab: {fileID: 100100000, guid: d96bc491a55274428925940d93fef9a0, type: 3}
 --- !u!1 &1308473501 stripped
 GameObject:
@@ -834,6 +837,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1308473518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308473501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a40d0f0ee85499ca6b76d2d933543e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 1209539002}
+  cubes: []
+  lookAcquireThreshold: 0.98
+  lookReleaseThreshold: 0.96
+  minVolume: 0.05
+  maxVolume: 1.5
+  focusTimeToMax: 3
+  spatialBlend: 0
+  maxDistance: 100
+  markerPrefab: {fileID: 1749123570405734575, guid: d50aa0710bd9a4dfd9ecfb048a1769cf, type: 3}
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  mixerGroup: {fileID: 0}
 --- !u!1 &1355388122
 GameObject:
   m_ObjectHideFlags: 0
