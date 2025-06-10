@@ -81,16 +81,13 @@ public class ProximityTrigger : MonoBehaviour
 
         GameObject target = lookController.currentLookTarget;
         if (target == null)
-        {
-            Debug.Log("🚫 currentLookTarget is null");
             return;
-        }
 
-        // Debug.Log($"👀 현재 시선 타겟: {target.name}, 이전 타겟: {(lastTriggeredTarget != null ? lastTriggeredTarget.name : "null")}");
+        // Debug.Log(triggered);
+        // Debug.Log($"👀 현재 시선 타겟: {target.name}, 이전 타겟: {(lastTriggeredTarget != null ? lastTriggeredTarget.name : "null")}, 현재 오브젝트: {gameObject.name}");
 
-        if ((clapHappened || target != lastTriggeredTarget) && target == gameObject)
+        if (target == gameObject)
         {
-            Debug.Log("✅ Trigger 조건 충족 — TriggerEffect 실행");
             TriggerEffect();
         }
     }
@@ -108,6 +105,12 @@ public class ProximityTrigger : MonoBehaviour
             return;
         }
 
+        if (triggered)
+        {
+            Debug.Log("⛔ 이미 Trigger됨 — 재실행 차단");
+            return;
+        }
+
         ChangeEnvironmentColors();
 
         if (cameraViewChanger != null)
@@ -117,20 +120,16 @@ public class ProximityTrigger : MonoBehaviour
         {
             soundManager.PlayTeleportSfx();
             soundManager.AddSound(profile);
-            triggered = true;
-            lastTriggeredTarget = gameObject;
-            Debug.Log("✅ Sound 추가 및 상태 갱신 완료");
         }
 
         ApplyMaterialEffect();
+        triggered = true;
+        lastTriggeredTarget = gameObject;
+        Debug.Log("✅ Sound 추가 및 상태 갱신 완료");
 
         if (onboardingManager != null)
         {
             onboardingManager.OnReformEnd();
-        }
-        else
-        {
-            Debug.LogWarning("❗ onboardingManager is null — please assign it in the Inspector.");
         }
     }
 
