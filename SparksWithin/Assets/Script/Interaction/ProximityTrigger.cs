@@ -22,6 +22,9 @@ public class ProximityTrigger : MonoBehaviour
     private Renderer cubeRenderer;
     private Material cubeMaterial;
     private SoundProfile profile;
+    private float lastTriggerTime = -999f;
+    public float triggerCooldown = 1.0f; // XR에서는 0.3~1.0초 추천
+
 
     private void Awake()
     {
@@ -69,29 +72,25 @@ public class ProximityTrigger : MonoBehaviour
         float handDistance = Vector3.Distance(leftHand.position, rightHand.position);
         if (clapHappened)
         {
-            Debug.Log("👏 ClapSimulator triggered!");
             handDistance = 0f;
         }
 
         if (handDistance >= handTouchThreshold)
-        {
-            Debug.Log("📏 손이 너무 멀음 — TriggerEffect 중단");
             return;
-        }
 
         GameObject target = lookController.currentLookTarget;
-        if (target == null)
+        if (target == null || target != gameObject)
             return;
 
-        // Debug.Log(triggered);
-        // Debug.Log($"👀 현재 시선 타겟: {target.name}, 이전 타겟: {(lastTriggeredTarget != null ? lastTriggeredTarget.name : "null")}, 현재 오브젝트: {gameObject.name}");
-
-        if (target == gameObject)
+        if (Time.time - lastTriggerTime < triggerCooldown)
         {
-            TriggerEffect();
+            Debug.Log("⏱ Cooldown 중: " + (Time.time - lastTriggerTime));
+            return;
         }
-    }
 
+        Debug.Log("✅ Trigger 조건 충족 — TriggerEffect 실행");
+        TriggerEffect();
+    }
 
     void TriggerEffect()
     {
@@ -101,6 +100,7 @@ public class ProximityTrigger : MonoBehaviour
             RestoreMaterialColor();
             triggered = false;
             lastTriggeredTarget = null;
+            lastTriggerTime = Time.time; // ⏱ 쿨다운 타임 갱신 추가!
             Debug.Log("🔁 트리거 상태 초기화 완료 (Remove)");
             return;
         }
@@ -125,6 +125,7 @@ public class ProximityTrigger : MonoBehaviour
         ApplyMaterialEffect();
         triggered = true;
         lastTriggeredTarget = gameObject;
+        lastTriggerTime = Time.time;
         Debug.Log("✅ Sound 추가 및 상태 갱신 완료");
 
         if (onboardingManager != null)
