@@ -64,25 +64,37 @@ public class ProximityTrigger : MonoBehaviour
         if (leftHand == null || rightHand == null || lookController == null || profile == null)
             return;
 
+        bool clapHappened = controls.ClapSimulator.Clap.triggered;
+
         float handDistance = Vector3.Distance(leftHand.position, rightHand.position);
-        if (controls.ClapSimulator.Clap.triggered)
+        if (clapHappened)
+        {
+            Debug.Log("👏 ClapSimulator triggered!");
             handDistance = 0f;
+        }
 
         if (handDistance >= handTouchThreshold)
+        {
+            Debug.Log("📏 손이 너무 멀음 — TriggerEffect 중단");
             return;
+        }
 
         GameObject target = lookController.currentLookTarget;
-
-        if (target != lastTriggeredTarget)
-            triggered = false;
-
-        if (!triggered && target == gameObject)
+        if (target == null)
         {
+            Debug.Log("🚫 currentLookTarget is null");
+            return;
+        }
+
+        // Debug.Log($"👀 현재 시선 타겟: {target.name}, 이전 타겟: {(lastTriggeredTarget != null ? lastTriggeredTarget.name : "null")}");
+
+        if ((clapHappened || target != lastTriggeredTarget) && target == gameObject)
+        {
+            Debug.Log("✅ Trigger 조건 충족 — TriggerEffect 실행");
             TriggerEffect();
-            triggered = true;
-            lastTriggeredTarget = target;
         }
     }
+
 
     void TriggerEffect()
     {
@@ -90,7 +102,9 @@ public class ProximityTrigger : MonoBehaviour
         {
             soundManager.RemoveSound(profile.beingName);
             RestoreMaterialColor();
-            Debug.Log($"🧹 Removed collected sound: {profile.beingName}");
+            triggered = false;
+            lastTriggeredTarget = null;
+            Debug.Log("🔁 트리거 상태 초기화 완료 (Remove)");
             return;
         }
 
@@ -103,6 +117,9 @@ public class ProximityTrigger : MonoBehaviour
         {
             soundManager.PlayTeleportSfx();
             soundManager.AddSound(profile);
+            triggered = true;
+            lastTriggeredTarget = gameObject;
+            Debug.Log("✅ Sound 추가 및 상태 갱신 완료");
         }
 
         ApplyMaterialEffect();

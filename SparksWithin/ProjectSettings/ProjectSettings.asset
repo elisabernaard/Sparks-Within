@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Head-Geneve
-  productName: Sparks Within
+  companyName: HEAD-Geneve
+  productName: SparksWithin
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -164,7 +164,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.HeadGeneve.SparksWithin
+    Android: com.HEADGeneve.SparksWithin
     Standalone: com.Unity-Technologies.VR-Template
   buildNumber:
     Standalone: 0
