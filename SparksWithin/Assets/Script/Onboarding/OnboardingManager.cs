@@ -20,11 +20,7 @@ public class OnboardingManager : MonoBehaviour
     public Transform leftHand;
     public Transform rightHand;
 
-    [Header("Animation & Sound")]
-    public Animator entityAnimator;
-    public string animationTrigger1 = "Trigger1";
-    public string animationTrigger2 = "Trigger2";
-    public AudioSource entityAudio;
+    [Header("Sound")]
     public AudioSource transitionAudioSource;
 
     [Header("Settings")]
@@ -34,7 +30,6 @@ public class OnboardingManager : MonoBehaviour
     private float timer = 0f;
     private bool hasShownFirstText = false;
     private bool hasShownSecondText = false;
-    private bool hasTriggeredHands = false;
 
     void Start()
     {
@@ -59,10 +54,10 @@ public class OnboardingManager : MonoBehaviour
             hasShownSecondText = true;
         }
 
-        if (hasShownSecondText && !hasTriggeredHands)
-        {
-            // TryTriggerHandClap();
-        }
+        // if (hasShownSecondText && !hasTriggeredHands)
+        // {
+        //     // TryTriggerHandClap();
+        // }
     }
 
     public void OnReformEnd()
@@ -95,12 +90,5 @@ public class OnboardingManager : MonoBehaviour
 
         yield return new WaitForSeconds(waitAfterFade);
         SceneManager.LoadScene(nextSceneName);
-    }
-
-    // ✅ 에러 해결용 메서드
-    public void OnDissolveEnd()
-    {
-        Debug.Log("🌀 OnDissolveEnd called from animation event.");
-        // 여기에 필요하다면 후속 로직 추가
     }
 }

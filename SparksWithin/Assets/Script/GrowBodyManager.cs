@@ -39,6 +39,6 @@ public class GrowBodyManager : MonoBehaviour
 
         material.SetFloat("_Grow", currentGrow);
 
-        Debug.Log($"🌱 Collected: {collectedCount} / {maxCollectedCount} | t = {t:F2} | Grow = {currentGrow:F2}");
+        // Debug.Log($"🌱 Collected: {collectedCount} / {maxCollectedCount} | t = {t:F2} | Grow = {currentGrow:F2}");
     }
 }
